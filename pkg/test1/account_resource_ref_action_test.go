@@ -29,3 +29,28 @@ func TestQueryAccountResourceRef(t *testing.T) {
 	}
 	fmt.Printf("data : %v", accountResources)
 }
+
+func TestQueryAccount(t *testing.T) {
+	accountLoginCli.Login()
+	defer accountLoginCli.Logout()
+	queryParam := param.NewQueryParam()
+	fmt.Println("Query All===============================")
+	account, err := accountLoginCli.QueryAccount(queryParam)
+	if err != nil {
+		golog.Errorf("TestAccount %v", err)
+	}
+	fmt.Printf("account data: %v", account)
+}
+
+func TestQueryIAM2Prject(t *testing.T) {
+
+	accountLoginCli.Login()
+	defer accountLoginCli.Logout()
+	queryParam := param.NewQueryParam()
+	fmt.Println("Query All===============================")
+	account, err := accountLoginCli.QuerryIAMProject(queryParam)
+	if err != nil {
+		golog.Errorf("TestQueryIAM2Prject %v", err)
+	}
+	fmt.Printf("account data: %v", account)
+}
