@@ -147,7 +147,7 @@ func TestDestroyVmInstance(t *testing.T) {
 }
 
 func TestQueryVmInstance(t *testing.T) {
-	data, err := accountLoginCli.QueryVmInstance(param.NewQueryParam())
+	data, err := accessKeyAuthCli.QueryVmInstance(param.NewQueryParam())
 	if err != nil {
 		t.Errorf("TestQueryVmInstance : %v", err)
 	}

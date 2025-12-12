@@ -20,7 +20,7 @@ type ImageView struct {
 	Platform          string                   `json:"platform"`     // Image system platform, Linux, Windows, WindowsVirtio, Other, Paravirtualization
 	Architecture      param.Architecture       `json:"architecture"` // x86_64, aarch64, mips64el
 	Format            string                   `json:"format"`       // Image format qcow2
-	System            string                   `json:"system"`       // Whether it is a system image (e.g., cloud router image)
+	System            bool                     `json:"system"`       // Whether it is a system image (e.g., cloud router image)
 	Virtio            bool                     `json:"virtio"`
 	BackupStorageRefs []ImageBackupStorageRefs `json:"backupStorageRefs"`
 	SystemTags        []string                 `json:"systemTags"`
