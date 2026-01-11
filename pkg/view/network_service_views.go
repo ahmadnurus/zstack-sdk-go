@@ -49,3 +49,11 @@ type SecurityGroupRuleInventoryView struct {
 	Type                    string `json:"type"`                   // Ingress, Egress
 	RemoteSecurityGroupUuid string `json:"remoteSecurityGroupUuid"`
 }
+
+type VmNicInSecurityGroup struct {
+	BaseTimeView
+	UUID              string `json:"uuid"`
+	VmNicUuid         string `json:"vmNicUuid"`
+	SecurityGroupUuid string `json:"securityGroupUuid"` // UUID of the security group this rule belongs to
+	VMInstanceUUID    string `json:"vmInstanceUuid"`    // Cloud host UUID
+}

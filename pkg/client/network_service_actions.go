@@ -36,6 +36,12 @@ func (cli *ZSClient) GetSecurityGroup(uuid string) (*view.SecurityGroupInventory
 	return &resp, nil
 }
 
+// QueryVmNicInSecurityGroup
+func (cli *ZSClient) QueryVmNicInSecurityGroup(params param.QueryParam) ([]view.VmNicInSecurityGroup, error) {
+	var resp []view.VmNicInSecurityGroup
+	return resp, cli.List("v1/security-groups/vm-instances/nics", &params, &resp)
+}
+
 // AddVmNicToSecurityGroup Add VM NIC to security group  TODO
 func (cli *ZSClient) AddVmNicToSecurityGroup(securityGroupUuid string, p param.AddVmNicToSecurityGroupParam) error {
 	return cli.Post("v1/security-groups/"+securityGroupUuid+"/vm-instances/nics", p, nil)
