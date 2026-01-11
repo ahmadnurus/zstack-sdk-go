@@ -47,6 +47,35 @@ func (cli *ZSClient) Login() (*view.SessionView, error) {
 	return sessionView, nil
 }
 
+func (cli *ZSClient) LoginIAM2Project(projectName string) (*view.SessionView, error) {
+	if cli.authType != AuthTypeIAM2VirtualID {
+		return nil, errors.ErrNotSupported
+	}
+
+	var sessionView *view.SessionView
+	var err error
+	sessionView, err = cli.loginIAM2VirtualID()
+	if err != nil {
+		golog.Errorf("ZSClient.LoginIAM2Project error:%v", err)
+		return nil, err
+	}
+
+	cli.LoadSession(sessionView.UUID)
+	params := param.LogInIAM2ProjectParam{
+		LoginIAM2Project: param.LogInIAM2ProjectDetailParam{
+			ProjectName: projectName,
+		},
+	}
+
+	if err := cli.Put("v1/iam2/projects/login", "", params, &sessionView); err != nil {
+		golog.Errorf("ZSClient.LoginIAM2Project ProjectName[%s] error:%v", projectName, err)
+		return nil, err
+	}
+
+	cli.LoadSession(sessionView.UUID)
+	return sessionView, nil
+}
+
 func (cli *ZSClient) logInByAccountUser() (*view.SessionView, error) {
 	if cli.authType != AuthTypeAccountUser {
 		return nil, errors.ErrNotSupported
@@ -93,6 +122,32 @@ func (cli *ZSClient) logInByAccount() (*view.SessionView, error) {
 	err := cli.Put("v1/accounts/login", "", params, &sessionView)
 	if err != nil {
 		golog.Errorf("ZSClient.logInByAccount Account[%s] error:%v", cli.accountName, err)
+		return nil, err
+	}
+
+	return &sessionView, nil
+}
+
+func (cli *ZSClient) loginIAM2VirtualID() (*view.SessionView, error) {
+	if cli.authType != AuthTypeIAM2VirtualID {
+		return nil, errors.ErrNotSupported
+	}
+
+	if len(cli.accountUserName) == 0 || len(cli.password) == 0 {
+		return nil, errors.ErrParameter
+	}
+
+	params := param.LogInIAM2VirtualIDParam{
+		LoginIAM2VirtualID: param.LoginIAM2VirtualIDDetailParam{
+			Name:     cli.accountUserName,
+			Password: fmt.Sprintf("%x", sha512.Sum512([]byte(cli.password))),
+		},
+	}
+
+	sessionView := view.SessionView{}
+	err := cli.Put("v1/iam2/virtual-ids/login", "", params, &sessionView)
+	if err != nil {
+		golog.Errorf("ZSClient.loginIAM2VirtualID Name[%s] error:%v", cli.accountUserName, err)
 		return nil, err
 	}
 

@@ -37,6 +37,7 @@ const (
 
 	accountLoginPath = "/v1/accounts/login"
 	userLoginPath    = "/v1/accounts/users/login"
+	iam2LoginPath    = "/v1/iam2/virtual-ids/login"
 	logoutPathPrefix = "/v1/accounts/sessions/"
 )
 
@@ -65,7 +66,7 @@ func NewZSHttpClient(config *ZSConfig) *ZSHttpClient {
 			url := req.URL.Path
 			uri := url[strings.Index(url, config.contextPath)+len(config.contextPath):]
 			// Authentication login
-			if req.Method == http.MethodPut && (uri == accountLoginPath || uri == userLoginPath) {
+			if req.Method == http.MethodPut && (uri == accountLoginPath || uri == userLoginPath || uri == iam2LoginPath) {
 				return nil, nil
 			}
 			// Authentication logout
@@ -505,13 +506,15 @@ func (cli *ZSHttpClient) getHeader(url, method string) (http.Header, error) {
 		return cli.getLoginHeader(url, method)
 	case AuthTypeAccountUser:
 		return cli.getLoginHeader(url, method)
+	case AuthTypeIAM2VirtualID:
+		return cli.getLoginHeader(url, method)
 	default:
 		return nil, errors.ErrNotSupported
 	}
 }
 
 func (cli *ZSHttpClient) getLoginHeader(url, method string) (http.Header, error) {
-	if cli.authType != AuthTypeAccount && cli.authType != AuthTypeAccountUser {
+	if cli.authType != AuthTypeAccount && cli.authType != AuthTypeAccountUser && cli.authType != AuthTypeIAM2VirtualID {
 		return nil, errors.ErrNotSupported
 	}
 
@@ -521,7 +524,7 @@ func (cli *ZSHttpClient) getLoginHeader(url, method string) (http.Header, error)
 		uri = uri[:strings.Index(uri, "?")]
 	}
 
-	if uri == accountLoginPath || uri == userLoginPath {
+	if uri == accountLoginPath || uri == userLoginPath || uri == iam2LoginPath {
 		return nil, nil
 	}
 

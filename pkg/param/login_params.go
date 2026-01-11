@@ -28,3 +28,22 @@ type LogInByUserDetailParam struct {
 	Password    string                 `json:"password"`    // Password
 	ClientInfo  map[string]interface{} `json:"clientInfo"`  // Client information
 }
+
+type LogInIAM2VirtualIDParam struct {
+	BaseParam
+	LoginIAM2VirtualID LoginIAM2VirtualIDDetailParam `json:"loginIAM2VirtualID"`
+}
+
+type LoginIAM2VirtualIDDetailParam struct {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
+
+type LogInIAM2ProjectParam struct {
+	BaseParam
+	LoginIAM2Project LogInIAM2ProjectDetailParam `json:"loginIAM2Project"`
+}
+
+type LogInIAM2ProjectDetailParam struct {
+	ProjectName string `json:"projectName"`
+}

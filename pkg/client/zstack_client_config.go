@@ -9,10 +9,11 @@ import (
 type AuthType string
 
 const (
-	AuthTypeAccessKey   AuthType = "AccessKey"
-	AuthTypeAccount     AuthType = "Account"
-	AuthTypeAccountUser AuthType = "AccountUser"
-	AuthTypeSession     AuthType = "Session"
+	AuthTypeAccessKey     AuthType = "AccessKey"
+	AuthTypeAccount       AuthType = "Account"
+	AuthTypeAccountUser   AuthType = "AccountUser"
+	AuthTypeIAM2VirtualID AuthType = "IAM2VirtualID"
+	AuthTypeSession       AuthType = "Session"
 )
 
 const (
@@ -83,6 +84,12 @@ func (config *ZSConfig) LoginAccountUser(accountName, accountUserName, password 
 	config.accountUserName = accountUserName
 	config.password = password
 	config.authType = AuthTypeAccountUser
+	return config
+}
+func (config *ZSConfig) LoginIAM2VirtualID(accountUserName, password string) *ZSConfig {
+	config.accountUserName = accountUserName
+	config.password = password
+	config.authType = AuthTypeIAM2VirtualID
 	return config
 }
 
